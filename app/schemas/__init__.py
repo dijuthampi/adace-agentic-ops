@@ -7,6 +7,21 @@ from app.schemas.seller import (
     CampaignOverviewSchema,
     CampaignMetricSummarySchema,
 )
+from app.schemas.mcp import (
+    MCPToolParameter,
+    MCPToolInfo,
+    MCPToolsListResponse,
+    SellerAnalysisResponse,
+    ExecuteToolRequest,
+    ExecuteToolResponse,
+)
+from app.schemas.workflow import (
+    RunWorkflowRequest,
+    ResumeWorkflowRequest,
+    AuditEventSchema,
+    WorkflowRunResponse,
+    WorkflowDetailResponse,
+)
 
 __all__ = [
     "HealthResponse",
@@ -16,4 +31,15 @@ __all__ = [
     "CommunicationSettingsSchema",
     "CampaignOverviewSchema",
     "CampaignMetricSummarySchema",
+    "MCPToolParameter",
+    "MCPToolInfo",
+    "MCPToolsListResponse",
+    "SellerAnalysisResponse",
+    "ExecuteToolRequest",
+    "ExecuteToolResponse",
+    "RunWorkflowRequest",
+    "ResumeWorkflowRequest",
+    "AuditEventSchema",
+    "WorkflowRunResponse",
+    "WorkflowDetailResponse",
 ]

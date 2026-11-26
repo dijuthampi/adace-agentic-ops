@@ -9,6 +9,10 @@ from app.models.adace import (
     SearchTerm,
     AdAceStatusLog,
 )
+from app.models.agent import (
+    AgentWorkflowRun,
+    AgentAuditEvent,
+)
 
 __all__ = [
     "Seller",
@@ -19,4 +23,6 @@ __all__ = [
     "KeywordReport",
     "SearchTerm",
     "AdAceStatusLog",
+    "AgentWorkflowRun",
+    "AgentAuditEvent",
 ]

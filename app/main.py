@@ -10,7 +10,9 @@ from app.core.config import settings
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     """Application lifespan context manager for startup and shutdown routines."""
-    # Startup phase
+    # Startup phase: initialize agent postgres schema
+    from app.db.postgres import init_agent_db
+    await init_agent_db()
     yield
     # Shutdown phase: dispose connection pools
     from app.db.mysql import adace_async_engine

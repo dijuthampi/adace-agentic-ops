@@ -48,6 +48,16 @@ async def get_agent_db() -> AsyncGenerator[AsyncSession, None]:
             await session.close()
 
 
+async def init_agent_db() -> None:
+    """Initialize PostgreSQL tables for Agent state persistence if database is available."""
+    try:
+        async with agent_async_engine.begin() as conn:
+            await conn.run_sync(AgentBase.metadata.create_all)
+    except Exception as exc:
+        import logging
+        logging.getLogger(__name__).warning("Agent DB init warning: %s", exc)
+
+
 async def check_pg_health() -> Dict[str, Any]:
     """Execute a lightweight probe to verify Agent PostgreSQL connectivity and measure latency."""
     start_time = time.perf_counter()
