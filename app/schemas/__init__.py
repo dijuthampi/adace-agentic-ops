@@ -22,6 +22,12 @@ from app.schemas.workflow import (
     WorkflowRunResponse,
     WorkflowDetailResponse,
 )
+from app.schemas.audit import (
+    AuditTrailItem,
+    UnifiedAuditTrailResponse,
+    WorkflowRunSummary,
+    SellerWorkflowHistoryResponse,
+)
 
 __all__ = [
     "HealthResponse",
@@ -42,4 +48,8 @@ __all__ = [
     "AuditEventSchema",
     "WorkflowRunResponse",
     "WorkflowDetailResponse",
+    "AuditTrailItem",
+    "UnifiedAuditTrailResponse",
+    "WorkflowRunSummary",
+    "SellerWorkflowHistoryResponse",
 ]
