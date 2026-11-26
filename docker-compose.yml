@@ -1,0 +1,80 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: adace_agentic_api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    environment:
+      - ADACE_MYSQL_URL=mysql+aiomysql://adace_user:adace_pass@adace_mysql:3306/adace_sandbox
+      - AGENT_PG_URL=postgresql+asyncpg://agent_user:agent_pass@agent_pg:5432/agent_state
+      - AI_PROVIDER=mock
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - ENVIRONMENT=development
+      - LOG_LEVEL=INFO
+    depends_on:
+      adace_mysql:
+        condition: service_healthy
+      agent_pg:
+        condition: service_healthy
+    networks:
+      - adace_network
+
+  adace_mysql:
+    image: mysql:8.0
+    container_name: adace_mysql
+    restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_DATABASE: adace_sandbox
+      MYSQL_USER: adace_user
+      MYSQL_PASSWORD: adace_pass
+      MYSQL_ROOT_PASSWORD: adace_root_secret
+    volumes:
+      - ./db/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - adace_mysql_data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u adace_user -padace_pass" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+    networks:
+      - adace_network
+
+  agent_pg:
+    image: postgres:16-alpine
+    container_name: agent_pg
+    restart: unless-stopped
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_DB: agent_state
+      POSTGRES_USER: agent_user
+      POSTGRES_PASSWORD: agent_pass
+    volumes:
+      - agent_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U agent_user -d agent_state" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    networks:
+      - adace_network
+
+volumes:
+  adace_mysql_data:
+    driver: local
+  agent_pg_data:
+    driver: local
+
+networks:
+  adace_network:
+    driver: bridge
